@@ -20,8 +20,11 @@ class SessionUpdate(BaseModel):
 
 class SessionResponse(BaseModel):
     id: int
+    user_id: int
+
     started_at: datetime
     ended_at: Optional[datetime] = None
+
     duration_seconds: Optional[int] = None
     total_blinks: Optional[int] = None
     average_blink_rate: Optional[float] = None

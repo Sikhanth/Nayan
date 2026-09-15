@@ -7,72 +7,107 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { motion } from "framer-motion";
 
-const data = [
-  { time: "10:00", blink: 14 },
-  { time: "10:05", blink: 15 },
-  { time: "10:10", blink: 13 },
-  { time: "10:15", blink: 16 },
-  { time: "10:20", blink: 12 },
-  { time: "10:25", blink: 15 },
-  { time: "10:30", blink: 14 },
-];
-
-function BlinkChart() {
+function BlinkChart({ data }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 25 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="mt-8 rounded-3xl border border-[#5C3527]/8 bg-white p-6 shadow-sm"
-    >
-      <h2 className="text-2xl font-bold text-[#2A211C]">
-        Blink Analytics
-      </h2>
+    <div className="mt-6 rounded-lg border border-[#5C3527]/12 bg-white p-6">
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-base font-semibold text-[#2A211C]">
+          Blink analytics
+        </h2>
 
-      <p className="mt-2 text-[#8A7060]">
-        Blink rate over the last 30 minutes.
-      </p>
-
-      <div className="mt-8 h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data}>
-            <defs>
-              <linearGradient id="blinkFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#5C3527" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="#5C3527" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-
-            <CartesianGrid strokeDasharray="4 4" stroke="#5C3527" strokeOpacity={0.1} />
-
-            <XAxis dataKey="time" stroke="#8A7060" tick={{ fill: "#8A7060", fontSize: 12 }} />
-
-            <YAxis stroke="#8A7060" tick={{ fill: "#8A7060", fontSize: 12 }} />
-
-            <Tooltip
-              contentStyle={{
-                borderRadius: 12,
-                border: "1px solid rgba(92,53,39,0.15)",
-                background: "#FCF9F3",
-                color: "#2A211C",
-              }}
-            />
-
-            <Area
-              type="monotone"
-              dataKey="blink"
-              stroke="#5C3527"
-              strokeWidth={3}
-              fill="url(#blinkFill)"
-              dot={{ r: 5, fill: "#5C3527", strokeWidth: 0 }}
-              activeDot={{ r: 8, fill: "#8A5A3B" }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <p className="text-sm text-[#8A7060]">
+          This session
+        </p>
       </div>
-    </motion.div>
+
+      <div className="mt-6 h-80">
+        {data.length === 0 ? (
+          <div className="flex h-full items-center justify-center text-sm text-[#8A7060]">
+            Blink data will appear here when a blink is detected.
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data}>
+              <defs>
+                <linearGradient
+                  id="blinkFill"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="#5C3527"
+                    stopOpacity={0.18}
+                  />
+
+                  <stop
+                    offset="100%"
+                    stopColor="#5C3527"
+                    stopOpacity={0}
+                  />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid
+                strokeDasharray="4 4"
+                stroke="#5C3527"
+                strokeOpacity={0.1}
+                vertical={false}
+              />
+
+              <XAxis
+                dataKey="time"
+                stroke="#8A7060"
+                tick={{
+                  fill: "#8A7060",
+                  fontSize: 12,
+                }}
+                tickLine={false}
+                axisLine={{ stroke: "#5C3527", strokeOpacity: 0.15 }}
+              />
+
+              <YAxis
+                stroke="#8A7060"
+                allowDecimals={false}
+                tick={{
+                  fill: "#8A7060",
+                  fontSize: 12,
+                }}
+                tickLine={false}
+                axisLine={false}
+              />
+
+              <Tooltip
+                contentStyle={{
+                  borderRadius: 6,
+                  border: "1px solid rgba(92,53,39,0.15)",
+                  background: "#FCF9F3",
+                  color: "#2A211C",
+                  fontSize: 13,
+                }}
+              />
+
+              <Area
+                type="monotone"
+                dataKey="blink"
+                stroke="#5C3527"
+                strokeWidth={2}
+                fill="url(#blinkFill)"
+                dot={false}
+                activeDot={{
+                  r: 4,
+                  fill: "#5C3527",
+                  strokeWidth: 0,
+                }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
+      </div>
+    </div>
   );
 }
 

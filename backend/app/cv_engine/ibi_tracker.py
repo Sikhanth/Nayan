@@ -1,19 +1,22 @@
+from collections import deque
 from time import time
 
 
 class IBITracker:
     """
     Tracks the Inter-Blink Interval (IBI).
+
+    IBI is the elapsed time between two consecutive blinks.
     """
 
-    def __init__(self):
+    def __init__(self, max_intervals: int = 100):
         self.last_blink_time = None
-        self.intervals = []
+        self.intervals = deque(maxlen=max_intervals)
 
-    def record_blink(self):
+    def record_blink(self) -> None:
         """
-        Record a blink and calculate the interval
-        from the previous blink.
+        Record a blink and calculate the interval from
+        the previous blink.
         """
         current_time = time()
 
@@ -25,7 +28,7 @@ class IBITracker:
 
     def get_average_ibi(self) -> float:
         """
-        Returns the average inter-blink interval.
+        Return the average Inter-Blink Interval in seconds.
         """
         if not self.intervals:
             return 0.0
@@ -35,7 +38,7 @@ class IBITracker:
             2,
         )
 
-    def reset(self):
+    def reset(self) -> None:
         """
         Reset the tracker.
         """

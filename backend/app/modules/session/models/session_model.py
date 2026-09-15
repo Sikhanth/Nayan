@@ -1,4 +1,12 @@
-from sqlalchemy import Column, Integer, Float, String, DateTime
+from sqlalchemy import (
+    Column,
+    Integer,
+    Float,
+    String,
+    DateTime,
+    ForeignKey,
+)
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.database.base import Base
@@ -7,20 +15,59 @@ from app.database.base import Base
 class Session(Base):
     __tablename__ = "sessions"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
 
-    started_at = Column(DateTime(timezone=True), server_default=func.now())
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=False,
+    )
 
-    ended_at = Column(DateTime(timezone=True), nullable=True)
+    started_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+    )
 
-    duration_seconds = Column(Integer, default=0)
+    ended_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
 
-    total_blinks = Column(Integer, default=0)
+    duration_seconds = Column(
+        Integer,
+        default=0,
+    )
 
-    average_blink_rate = Column(Float, default=0)
+    total_blinks = Column(
+        Integer,
+        default=0,
+    )
 
-    average_ibi = Column(Float, default=0)
+    average_blink_rate = Column(
+        Float,
+        default=0,
+    )
 
-    health_score = Column(Float, default=100)
+    average_ibi = Column(
+        Float,
+        default=0,
+    )
 
-    health_status = Column(String, default="Healthy")
+    health_score = Column(
+        Float,
+        default=100,
+    )
+
+    health_status = Column(
+        String,
+        default="Healthy",
+    )
+
+    user = relationship(
+        "User",
+        back_populates="sessions",
+    )

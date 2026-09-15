@@ -1,11 +1,17 @@
 from dataclasses import dataclass
 
+Point = tuple[int, int]
+
 
 @dataclass
 class EyeLandmarks:
     """
-    Stores the extracted eye landmark coordinates.
+    Stores the pixel coordinates of the detected eye landmarks.
+
+    Attributes:
+        left_eye: Six landmark points for the left eye.
+        right_eye: Six landmark points for the right eye.
     """
 
-    left_eye: list[tuple[int, int]]
-    right_eye: list[tuple[int, int]]
+    left_eye: list[Point]
+    right_eye: list[Point]

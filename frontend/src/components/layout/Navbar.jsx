@@ -2,9 +2,13 @@ import { useState } from "react";
 import { HiOutlineMenu } from "react-icons/hi";
 import { motion } from "framer-motion";
 import Menubar from "./Menubar";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   return (
     <>
@@ -15,43 +19,53 @@ function Navbar() {
         className="fixed top-0 left-0 z-50 w-full"
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
+
           {/* Logo */}
-          <div
-            className="flex items-center gap-4"
-            style={{ mixBlendMode: "difference" }}
-          >
+          <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-2xl font-bold tracking-wide text-white">
+              <h1
+                className={`text-2xl font-bold tracking-wide ${
+                  isHome ? "text-white" : "text-[#2A211C]"
+                }`}
+              >
                 Nayan
               </h1>
-              <p className="text-xs uppercase tracking-[0.25em] text-white/70">
+
+              <p
+                className={`text-xs uppercase tracking-[0.25em] ${
+                  isHome ? "text-white/70" : "text-[#8A7060]"
+                }`}
+              >
                 The Eye Guardian
               </p>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <div
-            className="hidden items-center gap-10 md:flex"
-            style={{ mixBlendMode: "difference" }}
-          >
+          <div className="hidden items-center gap-10 md:flex">
             <a
               href="#features"
-              className="text-white transition duration-300 hover:opacity-70"
+              className={`transition duration-300 hover:opacity-70 ${
+                isHome ? "text-white" : "text-[#2A211C]"
+              }`}
             >
               Features
             </a>
 
             <a
               href="#dashboard"
-              className="text-white transition duration-300 hover:opacity-70"
+              className={`transition duration-300 hover:opacity-70 ${
+                isHome ? "text-white" : "text-[#2A211C]"
+              }`}
             >
               Dashboard
             </a>
 
             <a
               href="#contact"
-              className="text-white transition duration-300 hover:opacity-70"
+              className={`transition duration-300 hover:opacity-70 ${
+                isHome ? "text-white" : "text-[#2A211C]"
+              }`}
             >
               Contact
             </a>
@@ -59,13 +73,25 @@ function Navbar() {
 
           {/* Right Side */}
           <div className="flex items-center gap-4">
-            <button className="hidden rounded-xl px-6 py-2.5 font-medium text-white transition-all duration-300 hover:bg-[#8B684A] hover:shadow-lg md:block">
-              Login
-            </button>
 
+            {/* Login */}
+            <Link
+              to="/login"
+              className={`hidden rounded-xl px-6 py-2.5 font-medium transition-all duration-300 hover:bg-[#8B684A] hover:shadow-lg md:block ${
+                isHome ? "text-white" : "text-[#2A211C]"
+              }`}
+            >
+              Login
+            </Link>
+
+            {/* Menu Button */}
             <button
               onClick={() => setIsOpen(true)}
-              className="rounded-xl border border-[#8B684A]/40 bg-[#5A3E2B]/60 p-3 text-white backdrop-blur-sm transition-all duration-300 hover:bg-[#8B684A]"
+              className={`rounded-xl border border-[#8B684A]/40 p-3 backdrop-blur-sm transition-all duration-300 hover:bg-[#8B684A] ${
+                isHome
+                  ? "bg-[#5A3E2B]/60 text-white"
+                  : "bg-[#8B684A]/20 text-[#5C3527]"
+              }`}
             >
               <HiOutlineMenu className="text-2xl" />
             </button>
@@ -73,6 +99,7 @@ function Navbar() {
         </div>
       </motion.nav>
 
+      {/* Mobile / Side Menu */}
       <Menubar
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

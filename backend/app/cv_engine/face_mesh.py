@@ -11,6 +11,7 @@ class FaceMeshEngine:
         self.mp_face_mesh = mp.solutions.face_mesh
 
         self.face_mesh = self.mp_face_mesh.FaceMesh(
+            static_image_mode=False,
             max_num_faces=1,
             refine_landmarks=True,
             min_detection_confidence=0.5,
@@ -19,8 +20,11 @@ class FaceMeshEngine:
 
     def process(self, frame):
         """
-        Process an OpenCV frame and return MediaPipe FaceMesh results.
+        Process an OpenCV BGR frame and return MediaPipe FaceMesh results.
         """
+        if frame is None:
+            return None
+
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         return self.face_mesh.process(rgb_frame)
 

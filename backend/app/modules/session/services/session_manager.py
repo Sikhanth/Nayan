@@ -19,29 +19,38 @@ class SessionManager:
     in the database.
     """
 
-    def __init__(self, db: Session):
+    def __init__(
+        self,
+        db: Session,
+        user_id: int,
+    ):
         self.db = db
+        self.user_id = user_id
         self.session_id = None
 
     def start(self):
         """
-        Create a new monitoring session.
+        Create a new monitoring session for the current user.
         """
 
         session = create_session(
             self.db,
             SessionCreate(),
+            self.user_id,
         )
 
         self.session_id = session.id
 
+        return session
+
     def finish(self, metrics):
         """
-        Update the monitoring session with final metrics.
+        Finish the current monitoring session
+        and save the final metrics.
         """
 
         if self.session_id is None:
-            return
+            return None
 
         session_data = SessionUpdate(
             ended_at=datetime.now(),
@@ -50,11 +59,15 @@ class SessionManager:
             average_blink_rate=metrics.blink_rate,
             average_ibi=metrics.average_ibi,
             health_score=metrics.health_score,
-            health_status=metrics.health_status,
+            health_status=metrics.eye_status,
         )
 
-        update_session(
+        session = update_session(
             self.db,
             self.session_id,
             session_data,
         )
+
+        self.session_id = None
+
+        return session

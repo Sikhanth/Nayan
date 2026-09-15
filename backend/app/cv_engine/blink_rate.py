@@ -5,6 +5,8 @@ from time import time
 class BlinkRateTracker:
     """
     Tracks blink rate using a sliding time window.
+
+    The blink rate is reported in blinks per minute (BPM).
     """
 
     def __init__(self, window_seconds: int = 60):
@@ -13,27 +15,30 @@ class BlinkRateTracker:
 
     def record_blink(self) -> None:
         """
-        Record a new blink.
+        Record a newly detected blink.
         """
         current_time = time()
 
         self.blink_timestamps.append(current_time)
-
         self._remove_old_blinks(current_time)
 
-    def get_blink_rate(self) -> int:
+    def get_blink_rate(self) -> float:
         """
-        Returns the current blink rate (blinks per minute).
+        Return the current blink rate in blinks per minute.
         """
         current_time = time()
 
         self._remove_old_blinks(current_time)
 
-        return len(self.blink_timestamps)
+        return (
+            len(self.blink_timestamps)
+            * 60
+            / self.window_seconds
+        )
 
     def reset(self) -> None:
         """
-        Reset blink history.
+        Clear all recorded blink history.
         """
         self.blink_timestamps.clear()
 

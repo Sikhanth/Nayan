@@ -1,16 +1,27 @@
 from sqlalchemy.orm import Session
 
-from app.modules.session.models.session_model import Session as SessionModel
-from app.modules.session.schemas.session_schema import SessionCreate,SessionUpdate
+from app.modules.session.models.session_model import (
+    Session as SessionModel,
+)
+
+from app.modules.session.schemas.session_schema import (
+    SessionCreate,
+    SessionUpdate,
+)
 
 
-def create_session(db: Session, session: SessionCreate):
+def create_session(
+    db: Session,
+    session: SessionCreate,
+    user_id: int,
+):
     """
-    Create a new monitoring session.
+    Create a new monitoring session for a user.
     """
 
     new_session = SessionModel(
-        started_at=session.started_at
+        user_id=user_id,
+        started_at=session.started_at,
     )
 
     db.add(new_session)
@@ -19,24 +30,75 @@ def create_session(db: Session, session: SessionCreate):
 
     return new_session
 
-def get_all_sessions(db: Session):
-    return db.query(SessionModel).all()
 
-def get_session_by_id(db: Session, session_id: int):
-    return db.query(SessionModel).filter(
-        SessionModel.id == session_id
-    ).first()
+def get_all_sessions(
+    db: Session,
+):
+    """
+    Return all monitoring sessions.
+    """
 
-def update_session(db: Session, session_id: int, session_data: SessionUpdate):
+    return (
+        db.query(SessionModel)
+        .order_by(SessionModel.started_at.desc())
+        .all()
+    )
 
-    session = db.query(SessionModel).filter(
-        SessionModel.id == session_id
-    ).first()
 
-    if not session:
+def get_session_by_id(
+    db: Session,
+    session_id: int,
+):
+    """
+    Return a session by its ID.
+    """
+
+    return (
+        db.query(SessionModel)
+        .filter(SessionModel.id == session_id)
+        .first()
+    )
+
+
+def get_sessions_by_user(
+    db: Session,
+    user_id: int,
+):
+    """
+    Return all sessions belonging to one user.
+    """
+
+    return (
+        db.query(SessionModel)
+        .filter(SessionModel.user_id == user_id)
+        .order_by(SessionModel.started_at.desc())
+        .all()
+    )
+
+
+def update_session(
+    db: Session,
+    session_id: int,
+    session_data: SessionUpdate,
+):
+    """
+    Update a monitoring session.
+    """
+
+    session = (
+        db.query(SessionModel)
+        .filter(SessionModel.id == session_id)
+        .first()
+    )
+
+    if session is None:
         return None
 
-    for key, value in session_data.model_dump(exclude_unset=True).items():
+    update_data = session_data.model_dump(
+        exclude_unset=True
+    )
+
+    for key, value in update_data.items():
         setattr(session, key, value)
 
     db.commit()
@@ -44,12 +106,22 @@ def update_session(db: Session, session_id: int, session_data: SessionUpdate):
 
     return session
 
-def delete_session(db: Session, session_id: int):
-    session = db.query(SessionModel).filter(
-        SessionModel.id == session_id
-    ).first()
 
-    if not session:
+def delete_session(
+    db: Session,
+    session_id: int,
+):
+    """
+    Delete a monitoring session.
+    """
+
+    session = (
+        db.query(SessionModel)
+        .filter(SessionModel.id == session_id)
+        .first()
+    )
+
+    if session is None:
         return None
 
     db.delete(session)

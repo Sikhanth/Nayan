@@ -8,7 +8,6 @@ import {
   HiOutlineDocumentChartBar,
   HiOutlineShieldCheck,
 } from "react-icons/hi2";
-
 const features = [
   {
     icon: HiOutlineEye,
@@ -47,61 +46,63 @@ const features = [
       "Your webcam data stays on your device whenever possible, helping keep your personal information private.",
   },
 ];
-
-const HEX_CLIP = "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)";
+const HEX_CLIP =
+  "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)";
 const HEX_W = 172;
 const HEX_GAP = 20;
-
 function Features() {
   const [active, setActive] = useState(null);
-
   const topRow = features.slice(0, 3);
   const bottomRow = features.slice(3, 6);
-
   const Hex = ({ feature, index }) => {
     const Icon = feature.icon;
     const isActive = active === index;
-
+    const toggleFeature = () => {
+      setActive(isActive ? null : index);
+    };
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: index * 0.08 }}
-        className="relative"
+        className="relative w-[132px] shrink-0 sm:w-[150px] md:w-[172px]"
         onMouseEnter={() => setActive(index)}
         onMouseLeave={() => setActive(null)}
-        style={{ width: HEX_W }}
+        onClick={toggleFeature}
       >
-        <div
-          style={{ clipPath: HEX_CLIP, height: HEX_W }}
-          className={`flex w-full flex-col items-center justify-center gap-2 px-7 transition-colors duration-300 ${
+        <button
+          type="button"
+          aria-expanded={isActive}
+          aria-label={`${feature.title}: ${feature.description}`}
+          className={`flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-2 px-5 text-center transition-colors duration-300 sm:px-7 ${
             isActive ? "bg-[#5C3527]" : "bg-[#EFE3D3]"
           }`}
+          style={{ clipPath: HEX_CLIP }}
         >
           <Icon
-            className={`text-3xl transition-colors duration-300 ${
+            className={`text-2xl transition-colors duration-300 sm:text-3xl ${
               isActive ? "text-[#FCF9F3]" : "text-[#8A5A3B]"
             }`}
           />
-          <h3
-            className={`text-center text-sm font-semibold leading-tight transition-colors duration-300 ${
+          <span
+            className={`text-center text-xs font-semibold leading-tight transition-colors duration-300 sm:text-sm ${
               isActive ? "text-[#FCF9F3]" : "text-[#371C10]"
             }`}
           >
             {feature.title}
-          </h3>
-
+          </span>
           <span
-            className={`absolute right-8 top-8 h-1.5 w-1.5 rounded-full bg-[#A99077] transition-opacity duration-300 ${
+            className={`absolute right-7 top-7 h-1.5 w-1.5 rounded-full bg-[#A99077] transition-opacity duration-300 sm:right-8 sm:top-8 ${
               isActive ? "opacity-100" : "opacity-0"
             }`}
           />
-        </div>
-
+        </button>
         <div
-          className={`pointer-events-none absolute left-1/2 top-full z-20 mt-3 w-56 -translate-x-1/2 rounded-2xl border border-[#5C3527]/15 bg-[#FCF9F3] p-4 text-center text-sm leading-6 text-[#5A473C] shadow-[0_15px_35px_rgba(0,0,0,0.25)] transition-all duration-300 ${
-            isActive ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+          className={`pointer-events-none absolute left-1/2 top-full z-20 mt-3 w-52 -translate-x-1/2 rounded-2xl border border-[#5C3527]/15 bg-[#FCF9F3] p-4 text-center text-sm leading-6 text-[#5A473C] shadow-[0_15px_35px_rgba(0,0,0,0.25)] transition-all duration-300 sm:w-56 ${
+            isActive
+              ? "translate-y-0 opacity-100"
+              : "-translate-y-2 opacity-0"
           }`}
         >
           {feature.description}
@@ -109,80 +110,75 @@ function Features() {
       </motion.div>
     );
   };
-
   return (
-    <section id="features" className="relative w-full bg-[#2A211C] py-28">
-      {/* Top fade — bridges the hero video's dark edge into this
-          section's flat background so the seam disappears */}
+    <section id="features" className="relative w-full bg-[#2A211C] py-20 sm:py-24 lg:py-28">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-40"
-        
       />
-      <div className="relative mx-auto max-w-7xl px-6">
-
-        {/* Eyebrow + heading on the dark page, outside the frame */}
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+          className="mb-10 text-center sm:mb-12"
         >
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.35em] text-[#A99077]">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.28em] text-[#A99077] sm:text-sm sm:tracking-[0.35em]">
             Features
           </p>
-          <h2 className="text-4xl font-bold text-white md:text-5xl">
+          <h2 className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
             Six facets, one compound eye
           </h2>
         </motion.div>
-
-        {/* Thick brown frame wrapping a cream inner panel */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="rounded-4xl bg-[#5C3527] p-3 md:p-4"
+          className="rounded-[1.75rem] bg-[#5C3527] p-2.5 sm:rounded-4xl sm:p-3 md:p-4"
         >
-          <div className="rounded-3xl bg-[#FCF9F3] px-6 py-16 md:px-10 md:py-20">
-
-            <p className="mb-16 text-center text-sm text-[#8A7060]">
-              Hover a facet to see what it watches for.
+          <div className="flex min-h-full flex-col justify-center rounded-[1.35rem] bg-[#FCF9F3] px-4 py-12 sm:rounded-3xl sm:px-6 sm:py-16 md:px-10 md:py-20 lg:min-h-[588px]">
+            <p className="mb-12 text-center text-xs leading-6 text-[#8A7060] sm:mb-16 sm:text-sm">
+              Tap a facet to see what it watches for.
             </p>
-
-            <div className="flex flex-col items-center pb-4">
-              <div className="mx-auto flex justify-center" style={{ gap: HEX_GAP }}>
-                {topRow.map((feature, i) => (
-                  <Hex key={feature.title} feature={feature} index={i} />
+            {/* Mobile layout */}
+            <div className="grid grid-cols-2 justify-items-center gap-x-3 gap-y-7 sm:hidden">
+              {features.map((feature, index) => (
+                <Hex key={feature.title} feature={feature} index={index} />
+              ))}
+            </div>
+            {/* Tablet and desktop layout */}
+            <div className="hidden flex-col items-center pb-4 sm:flex">
+              <div
+                className="mx-auto flex justify-center"
+                style={{ gap: HEX_GAP }}
+              >
+                {topRow.map((feature, index) => (
+                  <Hex key={feature.title} feature={feature} index={index} />
                 ))}
               </div>
-
               <div
-                className="mx-auto mt-6 hidden justify-center sm:flex"
+                className="mx-auto flex justify-center"
                 style={{
                   gap: HEX_GAP,
                   marginTop: -(HEX_W * 0.25),
                   transform: `translateX(${(HEX_W + HEX_GAP) / 2}px)`,
                 }}
               >
-                {bottomRow.map((feature, i) => (
-                  <Hex key={feature.title} feature={feature} index={i + 3} />
-                ))}
-              </div>
-
-              <div className="mt-6 flex justify-center gap-5 sm:hidden">
-                {bottomRow.map((feature, i) => (
-                  <Hex key={`m-${feature.title}`} feature={feature} index={i + 3} />
+                {bottomRow.map((feature, index) => (
+                  <Hex
+                    key={feature.title}
+                    feature={feature}
+                    index={index + 3}
+                  />
                 ))}
               </div>
             </div>
           </div>
         </motion.div>
-
       </div>
     </section>
   );
 }
-
 export default Features;
